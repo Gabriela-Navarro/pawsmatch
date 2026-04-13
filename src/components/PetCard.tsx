@@ -29,6 +29,7 @@ export function PetCard({ pet, onLike, onPass }: PetCardProps) {
 
   const fallbackImg = `https://placehold.co/400x500/f0e6d3/8B4513?text=${encodeURIComponent(pet.name)}`;
 
+  // Mouse handlers
   const handleMouseDown = (e: React.MouseEvent) => {
     setDragStart(e.clientX);
     setIsDragging(true);
@@ -40,6 +41,25 @@ export function PetCard({ pet, onLike, onPass }: PetCardProps) {
   };
 
   const handleMouseUp = () => {
+    if (dragOffset > 80) onLike();
+    else if (dragOffset < -80) onPass();
+    setDragOffset(0);
+    setDragStart(null);
+    setIsDragging(false);
+  };
+
+  // Touch handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setDragStart(e.touches[0].clientX);
+    setIsDragging(true);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || dragStart === null) return;
+    setDragOffset(e.touches[0].clientX - dragStart);
+  };
+
+  const handleTouchEnd = () => {
     if (dragOffset > 80) onLike();
     else if (dragOffset < -80) onPass();
     setDragOffset(0);
@@ -63,6 +83,9 @@ export function PetCard({ pet, onLike, onPass }: PetCardProps) {
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       {/* Overlays */}
       {likeOpacity > 0 && (
@@ -135,6 +158,7 @@ export function PetCard({ pet, onLike, onPass }: PetCardProps) {
         <div className="flex gap-3 px-5 pb-5">
           <button
             onClick={onPass}
+            aria-label="Pasar mascota"
             className="flex-1 py-3 rounded-2xl font-bold transition-all hover:scale-105 active:scale-95"
             style={{
               background: '#fff0f0',
@@ -147,6 +171,7 @@ export function PetCard({ pet, onLike, onPass }: PetCardProps) {
           </button>
           <button
             onClick={onLike}
+            aria-label="Adoptar mascota"
             className="flex-1 py-3 rounded-2xl font-bold transition-all hover:scale-105 active:scale-95"
             style={{
               background: '#f4a261',

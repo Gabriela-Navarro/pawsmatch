@@ -10,14 +10,17 @@ export function usePetStack(filters: FilterState) {
   const [passed, setPassed] = useState<Pet[]>([]);
   const [loading, setLoading] = useState(true);
 
- 
   useEffect(() => {
     setLoading(true);
     const filtered = filterPets(allPetsData, filters.type, filters.location);
-    const shuffled = [...filtered].sort(() => Math.random() - 0.5);
-    setStack(shuffled); // <-- ya no es solo 3, son TODAS
-    setLiked([]);
-    setPassed([]);
+    // Excluir las que ya fueron liked o passed
+    const likedIds = liked.map((p) => p.id);
+    const passedIds = passed.map((p) => p.id);
+    const remaining = filtered.filter(
+      (p) => !likedIds.includes(p.id) && !passedIds.includes(p.id)
+    );
+    const shuffled = [...remaining].sort(() => Math.random() - 0.5);
+    setStack(shuffled);
     setLoading(false);
   }, [filters]);
 

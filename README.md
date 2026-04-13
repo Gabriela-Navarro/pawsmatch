@@ -11,13 +11,13 @@ En lugar de escribir código manualmente, el desarrollador **orquesta modelos de
 ## ✨ Features
 
 - 🐕 Catálogo de 15 mascotas con fotos (perros, gatos, conejos y aves)
-- ❤️ Sistema de match/like con swipe (arrastra la tarjeta o usa los botones)
+- ❤️ Sistema de match/like con swipe (mouse y táctil para móvil)
 - 🔍 Filtros por tipo de mascota
 - 📍 Filtros por ubicación (Ciudad de Guatemala, Antigua Guatemala, Quetzaltenango, Sololá, Cobán)
-- ⚡ Pre-fetch buffer — carga la siguiente mascota en segundo plano para cero latencia
+- ⚡ Matches persistentes — no se borran al cambiar filtros
+- ♿ Accesible — botones con aria-labels para lectores de pantalla
 - 💎 Diseño moderno, limpio y mobile-first
 - ✅ 14 tests automatizados con Vitest
-
 ## 🛠 Tech Stack
 
 - **React 18** + **TypeScript**
