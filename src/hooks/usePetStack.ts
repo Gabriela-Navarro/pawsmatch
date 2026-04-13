@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { Pet } from '../types';
 import { pets as allPetsData } from '../data/pets';
 import { filterPets } from '../services/petService';
@@ -9,13 +9,14 @@ export function usePetStack(filters: FilterState) {
   const [liked, setLiked] = useState<Pet[]>([]);
   const [passed, setPassed] = useState<Pet[]>([]);
   const [loading, setLoading] = useState(true);
+  const likedRef = useRef<Pet[]>([]);
+  const passedRef = useRef<Pet[]>([]);
 
   useEffect(() => {
     setLoading(true);
     const filtered = filterPets(allPetsData, filters.type, filters.location);
-    // Excluir las que ya fueron liked o passed
-    const likedIds = liked.map((p) => p.id);
-    const passedIds = passed.map((p) => p.id);
+    const likedIds = likedRef.current.map((p) => p.id);
+    const passedIds = passedRef.current.map((p) => p.id);
     const remaining = filtered.filter(
       (p) => !likedIds.includes(p.id) && !passedIds.includes(p.id)
     );
@@ -27,14 +28,16 @@ export function usePetStack(filters: FilterState) {
   const swipeRight = useCallback(() => {
     if (stack.length === 0) return;
     const [current, ...rest] = stack;
-    setLiked((prev) => [...prev, current]);
+    likedRef.current = [...likedRef.current, current];
+    setLiked([...likedRef.current]);
     setStack(rest);
   }, [stack]);
 
   const swipeLeft = useCallback(() => {
     if (stack.length === 0) return;
     const [current, ...rest] = stack;
-    setPassed((prev) => [...prev, current]);
+    passedRef.current = [...passedRef.current, current];
+    setPassed([...passedRef.current]);
     setStack(rest);
   }, [stack]);
 

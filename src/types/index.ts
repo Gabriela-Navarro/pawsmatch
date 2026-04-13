@@ -1,9 +1,11 @@
+export type PetType = 'dog' | 'cat' | 'rabbit' | 'bird';
+
 export interface Pet {
   id: string;
   name: string;
   breed: string;
   age: number;
-  type: 'dog' | 'cat' | 'rabbit' | 'bird';
+  type: PetType;
   location: string;
   bio: string;
   imageUrl: string;
@@ -17,6 +19,6 @@ export interface PetProfile extends Pet {
 export type SwipeDirection = 'left' | 'right';
 
 export interface FilterState {
-  type: string;
+  type: PetType | 'Todos';
   location: string;
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FilterState } from './types';
 import { usePetStack } from './hooks/usePetStack';
 import { PetCard } from './components/PetCard';
@@ -9,11 +9,20 @@ export default function App() {
   const [filters, setFilters] = useState<FilterState>({ type: 'Todos', location: 'Todas' });
   const { currentPet, liked, passed, swipeRight, swipeLeft, loading } = usePetStack(filters);
 
+  // Soporte de teclado ← →
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') swipeRight();
+      if (e.key === 'ArrowLeft') swipeLeft();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [swipeRight, swipeLeft]);
+
   return (
     <div className="min-h-screen flex flex-col items-center" style={{
       background: 'linear-gradient(160deg, #fdfcfb 0%, #f0ede8 100%)',
     }}>
-      {/* Header */}
       <header className="w-full text-center py-8 px-4">
         <h1 className="text-5xl font-black tracking-tight" style={{
           fontFamily: 'Playfair Display, serif',
@@ -28,11 +37,13 @@ export default function App() {
         }}>
           Encuentra a tu compañero perfecto
         </p>
+        <p className="text-xs mt-1" style={{ color: '#bbb' }}>
+          Usa ← → para navegar
+        </p>
         <div className="w-16 h-1 rounded-full mx-auto mt-3" style={{ background: '#f4a261' }} />
       </header>
 
       <main className="flex flex-col lg:flex-row gap-8 w-full max-w-5xl px-4 pb-10 items-start justify-center">
-        {/* Left: Filters + Card */}
         <div className="flex flex-col items-center gap-5 flex-1">
           <FilterBar filters={filters} onChange={setFilters} />
 
@@ -52,7 +63,6 @@ export default function App() {
           )}
         </div>
 
-        {/* Right: Match panel */}
         <div className="flex-shrink-0 w-full lg:w-72">
           <MatchPanel liked={liked} passed={passed} />
         </div>
